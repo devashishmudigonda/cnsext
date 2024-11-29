@@ -1,0 +1,157 @@
+#Casesar Cipher
+def encrypt(message, key):
+    newstr = ""
+    for char in message:
+        newstr += chr((ord(char) - 97 + key) % 26 + 97)
+    return newstr
+
+def decrypt(message, key):
+    newstr = ""
+    for char in message:
+        newstr += chr((ord(char) - 97 - key) % 26 + 97)
+    return newstr
+
+message = input("Enter message (lowercase only): ")
+key = int(input("Enter key: "))
+encrypted_message = encrypt(message, key)
+print("Encrypted message is:", encrypted_message)
+decrypted_message = decrypt(encrypted_message, key)
+print("Decrypted message is:", decrypted_message)
+
+
+#Substitution Cipher
+def encrypt(plaintext, key):
+    encrypted_text = ""
+    for i in range(len(plaintext)):
+        encrypted_text += chr((ord(plaintext[i]) - 97 + key[i]) % 26 + 97)
+    return encrypted_text
+
+def decrypt(encrypted_text, key):
+    decrypted_text = ""
+    for i in range(len(encrypted_text)):
+        decrypted_text += chr((ord(encrypted_text[i]) - 97 - key[i]) % 26 + 97)
+    return decrypted_text
+
+plaintext = "abc"
+key = [1, 3, 5]  
+encrypted_text = encrypt(plaintext, key)
+print("Encrypted Text:", encrypted_text)
+decrypted_text = decrypt(encrypted_text, key)
+print("Decrypted Text:", decrypted_text)
+
+
+
+#Hill Cipher
+def hill_encrypt(plaintext, key_matrix):
+    plaintext = plaintext.replace(" ", "").lower()
+    while len(plaintext) % 3 != 0:
+        plaintext += "x"  
+    ciphertext = ""
+    for i in range(0, len(plaintext), 3):
+        block = [ord(plaintext[i]) - 97, ord(plaintext[i+1]) - 97, ord(plaintext[i+2]) - 97]
+        encrypted_block = [
+            (key_matrix[0][0] * block[0] + key_matrix[0][1] * block[1] + key_matrix[0][2] * block[2]) % 26,
+            (key_matrix[1][0] * block[0] + key_matrix[1][1] * block[1] + key_matrix[1][2] * block[2]) % 26,
+            (key_matrix[2][0] * block[0] + key_matrix[2][1] * block[1] + key_matrix[2][2] * block[2]) % 26
+        ]
+        ciphertext += chr(encrypted_block[0] + 97) + chr(encrypted_block[1] + 97) + chr(encrypted_block[2] + 97)
+    
+    return ciphertext
+
+def determinant_3x3(matrix):
+    return (matrix[0][0] * (matrix[1][1] * matrix[2][2] - matrix[1][2] * matrix[2][1]) -
+            matrix[0][1] * (matrix[1][0] * matrix[2][2] - matrix[1][2] * matrix[2][0]) +
+            matrix[0][2] * (matrix[1][0] * matrix[2][1] - matrix[1][1] * matrix[2][0])) % 26
+
+def mod_inverse(a, m):
+    for x in range(1, m):
+        if (a * x) % m == 1:
+            return x
+    return None
+
+def hill_decrypt(ciphertext, key_matrix):
+    det = determinant_3x3(key_matrix)
+    det_inv = mod_inverse(det, 26)
+    if det_inv is None:
+        raise ValueError("Matrix is not invertible")
+    adjoint = [
+        [key_matrix[1][1] * key_matrix[2][2] - key_matrix[1][2] * key_matrix[2][1], key_matrix[0][2] * key_matrix[2][0] - key_matrix[0][0] * key_matrix[2][2], key_matrix[0][1] * key_matrix[1][0] - key_matrix[0][0] * key_matrix[1][1]],
+        [key_matrix[1][2] * key_matrix[2][0] - key_matrix[1][0] * key_matrix[2][2], key_matrix[0][0] * key_matrix[2][1] - key_matrix[0][1] * key_matrix[2][0], key_matrix[0][1] * key_matrix[1][2] - key_matrix[0][2] * key_matrix[1][1]],
+        [key_matrix[1][0] * key_matrix[2][1] - key_matrix[1][1] * key_matrix[2][0], key_matrix[0][1] * key_matrix[2][0] - key_matrix[0][0] * key_matrix[2][1], key_matrix[0][0] * key_matrix[1][1] - key_matrix[0][1] * key_matrix[1][0]]
+    ]
+    
+    # Multiply adjoint by the modular inverse of the determinant
+    inverse_matrix = [[(det_inv * adjoint[i][j]) % 26 for j in range(3)] for i in range(3)]
+    
+    plaintext = ""
+    for i in range(0, len(ciphertext), 3):
+        block = [ord(ciphertext[i]) - 97, ord(ciphertext[i+1]) - 97, ord(ciphertext[i+2]) - 97]
+        decrypted_block = [
+            (inverse_matrix[0][0] * block[0] + inverse_matrix[0][1] * block[1] + inverse_matrix[0][2] * block[2]) % 26,
+            (inverse_matrix[1][0] * block[0] + inverse_matrix[1][1] * block[1] + inverse_matrix[1][2] * block[2]) % 26,
+            (inverse_matrix[2][0] * block[0] + inverse_matrix[2][1] * block[1] + inverse_matrix[2][2] * block[2]) % 26
+        ]
+        plaintext += chr(decrypted_block[0] + 97) + chr(decrypted_block[1] + 97) + chr(decrypted_block[2] + 97)
+    
+    return plaintext
+
+key_matrix = [[6, 24, 1], [1, 16, 4], [3, 17, 10]]  
+plaintext = "hello"
+
+encrypted_text = hill_encrypt(plaintext, key_matrix)
+print("Encrypted:", encrypted_text)
+
+decrypted_text = hill_decrypt(encrypted_text, key_matrix)
+print("Decrypted:", decrypted_text)
+
+
+
+#PlayFair Cipher
+def create_playfair_matrix(key):
+    key = key.lower().replace("j", "i") 
+    matrix = ""
+    for char in key:
+        if char not in matrix and char.isalpha():
+            matrix += char
+    for char in "abcdefghijklmnopqrstuvwxyz":
+        if char not in matrix:
+            matrix += char
+    
+    return matrix
+
+def prepare_text(plaintext):
+    plaintext = plaintext.lower().replace(" ", "")
+    prepared_text = []
+    i = 0
+    while i < len(plaintext):
+        if i + 1 < len(plaintext) and plaintext[i] == plaintext[i + 1]:
+            prepared_text.append(plaintext[i] + "x")  # Add 'x' if there are double letters
+            i += 1
+        else:
+            prepared_text.append(plaintext[i:i + 2])
+            i += 2
+    return prepared_text
+
+def encrypt_digraph(digraph, matrix):
+    # Get the positions of each letter in the matrix
+    row1, col1 = divmod(matrix.index(digraph[0]), 5)
+    row2, col2 = divmod(matrix.index(digraph[1]), 5)
+    if row1 == row2:  # Same row, shift columns
+        return matrix[row1 * 5 + (col1 + 1) % 5] + matrix[row2 * 5 + (col2 + 1) % 5]
+    elif col1 == col2:  # Same column, shift rows
+        return matrix[((row1 + 1) % 5) * 5 + col1] + matrix[((row2 + 1) % 5) * 5 + col2]
+    else:  # Rectangle, swap corners
+        return matrix[row1 * 5 + col2] + matrix[row2 * 5 + col1]
+
+def playfair_encrypt(plaintext, key):
+    matrix = create_playfair_matrix(key)  
+    prepared_text = prepare_text(plaintext)  
+    ciphertext = "".join([encrypt_digraph(digraph, matrix) for digraph in prepared_text])  
+    return ciphertext
+
+plaintext = "hello"
+key = "keyword"
+encrypted_text = playfair_encrypt(plaintext, key)
+print("Encrypted:", encrypted_text)
+
+

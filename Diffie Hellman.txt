@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Browser</title>
+</head>
+
+<body>
+  <h2>Diffie hellman key exchange</h2>
+  Enter prime number p : <input type="number" id="p"></input><br><br>
+  Enter base q: <input type="number" id="q"></input><br><br>
+  <!-- <br><button onClick="computeKeys()">calculate keys</button><br><br><br> -->
+    Enter user A private key: <input type="number" id="xa"></input><br>
+    Enter user B private key: <input type="number" id="xb"></input><br><br>
+    <button onClick="checkSimilarity()">Check for similar keys</button>
+    <p id="solution"></p>
+
+  <script>
+    let prime,base,Aprivate,Bprivate,Apublic,Bpublic,Ashared,Bshared;
+    function checkSimilarity(){
+    prime=parseInt(document.getElementById("p").value);
+    base=parseInt(document.getElementById("q").value);
+    Aprivate=parseInt(document.getElementById("xa").value);
+    Bprivate=parseInt(document.getElementById("xb").value);
+    Apublic=(Math.pow(base,Aprivate))%prime;
+    Bpublic=(Math.pow(base,Bprivate))%prime;
+        Ashared=(Math.pow(Bpublic,Aprivate))%prime;
+        Bshared=(Math.pow(Apublic,Bprivate))%prime;
+        if (Ashared==Bshared){
+            document.getElementById("solution").innerHTML="Keys are similar";
+        }
+        else{
+            document.getElementById("solution").innerHTML="Keys are not similar";
+        }
+    }
+    </script>
+</body>
+
+</html>

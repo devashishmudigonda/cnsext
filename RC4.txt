@@ -1,0 +1,26 @@
+def rc4(key, plaintext):
+    # Key scheduling
+    S = list(range(256))  # Initialize the state vector S
+    j = 0
+    for i in range(256):
+        j = (j + S[i] + key[i % len(key)]) % 256
+        S[i], S[j] = S[j], S[i]  # Swap values of S[i] and S[j]
+
+    i = 0
+    j = 0
+    result = []
+    for char in plaintext:
+        i = (i + 1) % 256
+        j = (j + S[i]) % 256
+        S[i], S[j] = S[j], S[i]  # Swap values of S[i] and S[j]
+        k = S[(S[i] + S[j]) % 256]
+        result.append(chr(ord(char) ^ k))  # XOR the plaintext byte with the key byte
+    
+    return ''.join(result)
+
+key = "key".encode('utf-8')  
+plaintext = "helloworld"  
+encrypted = rc4(key, plaintext)
+print("Encrypted:", encrypted)
+decrypted = rc4(key, encrypted)
+print("Decrypted:", decrypted)

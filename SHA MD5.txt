@@ -1,0 +1,52 @@
+#SHA - 1
+import hashlib
+
+def sender_side(message):
+    sha1 = hashlib.sha1()
+    sha1.update(message.encode('utf-8'))
+    message_hash = sha1.hexdigest()  
+    print("Sender: Message sent:", message)
+    print("Sender: SHA-1 Hash sent:", message_hash)
+    return message, message_hash
+
+def receiver_side(message, received_hash):
+    print("Receiver: Received message:", message)
+    print("Receiver: Received SHA-1 Hash:", received_hash)
+    sha1 = hashlib.sha1()
+    sha1.update(message.encode('utf-8'))
+    computed_hash = sha1.hexdigest()  
+    if computed_hash == received_hash:
+        print("Receiver: Message is verified, no tampering detected.")
+    else:
+        print("Receiver: Warning! Message has been tampered with.")
+
+message = input("Sender: Enter message to send: ")
+encrypted_msg,hash_message=sender_side(message)
+receiver_side(encrypted_msg, hash_message)
+
+
+#MD5
+import hashlib
+
+def sender_side(message):
+    md5 = hashlib.md5() 
+    md5.update(message.encode('utf-8'))  
+    message_hash = md5.hexdigest() 
+    print("Sender: Message sent:", message)
+    print("Sender: MD5 Hash sent:", message_hash)
+    return message, message_hash
+
+def receiver_side(message, received_hash):
+    print("Receiver: Received message:", message)
+    print("Receiver: Received MD5 Hash:", received_hash)
+    md5 = hashlib.md5()
+    md5.update(message.encode('utf-8'))
+    computed_hash = md5.hexdigest()  
+    if computed_hash == received_hash:
+        print("Receiver: Message is verified, no tampering detected.")
+    else:
+        print("Receiver: Warning! Message has been tampered with.")
+
+message = input("Sender: Enter message to send: ")  
+encrypted_msg, hash_message = sender_side(message)
+receiver_side(encrypted_msg, hash_message)  

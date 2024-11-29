@@ -1,0 +1,28 @@
+def euclidean_gcd(a, b):
+    while b != 0:
+        remainder = a % b
+        a = b
+        b = remainder
+    return a
+
+def extended_euclidean(a, b):
+    x0, x1 = 1, 0
+    y0, y1 = 0, 1
+    while b != 0:
+        q = a // b  
+        remainder = a % b
+        a = b
+        b = remainder
+        new_x = x0 - q * x1
+        new_y = y0 - q * y1
+        x0, x1 = x1, new_x
+        y0, y1 = y1, new_y
+    return a, x0, y0  
+    
+a = int(input("Enter first number (a): "))
+b = int(input("Enter second number (b): "))
+gcd = euclidean_gcd(a, b)
+print(f"\nEuclidean Algorithm:\nGCD of {a} and {b} is: {gcd}")
+gcd, x, y = extended_euclidean(a, b)
+print(f"\nExtended Euclidean Algorithm:\nGCD of {a} and {b} is: {gcd}")
+print(f"Coefficients x and y are: {x} and {y}")

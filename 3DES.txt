@@ -1,0 +1,27 @@
+!pip install pycryptodome
+
+from Crypto.Cipher import DES3
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+key = get_random_bytes(24)
+cipher = DES3.new(key, DES3.MODE_ECB)
+
+def encrypt(message):
+    cipher = DES3.new(key, DES3.MODE_ECB)
+    padded_text = pad(message, DES3.block_size)
+    encrypted_msg = cipher.encrypt(padded_text)
+    return encrypted_msg
+
+def decrypt(encrypted_msg):
+    cipher = DES3.new(key, DES3.MODE_ECB)
+    decrypted_msg = cipher.decrypt(encrypted_msg)
+    unpad_text = unpad(decrypted_msg, DES3.block_size)ello
+    return unpad_text
+
+message = input("Enter message: ")
+encrypted_msg = encrypt(message.encode('utf-8'))
+print("Encrypted message:", encrypted_msg)
+
+decrypted_msg = decrypt(encrypted_msg)
+print("Decrypted message:", decrypted_msg.decode('utf-8'))

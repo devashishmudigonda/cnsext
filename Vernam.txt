@@ -1,0 +1,23 @@
+def encrypt(plaintext, key):
+    ciphertext = []
+    for i in range(len(plaintext)):
+        c = chr(ord(plaintext[i]) ^ ord(key[i]))  
+        ciphertext.append(c)
+    return ''.join(ciphertext)
+
+def decrypt(ciphertext, key):
+    decrypted_text = []
+    for i in range(len(ciphertext)):
+        p = chr(ord(ciphertext[i]) ^ ord(key[i]))  
+        decrypted_text.append(p)
+    return ''.join(decrypted_text)
+
+plaintext = input("Enter plaintext: ")
+key = input("Enter key (must be the same length as plaintext): ")
+if len(key) != len(plaintext):
+    print("Error: Key must be the same length as plaintext.")
+else:
+    encrypted_text = encrypt(plaintext, key)
+    print("Encrypted Text (in readable format):", repr(encrypted_text))
+    decrypted_text = decrypt(encrypted_text, key)
+    print("Decrypted Text:", decrypted_text)

@@ -1,0 +1,37 @@
+def encrypt(plaintext, keyword):
+    ciphertext = []
+    keyword = keyword.upper()
+    plaintext = plaintext.upper()
+    keyword_index = 0
+    for char in plaintext:
+        if char.isalpha():
+            shift = ord(keyword[keyword_index % len(keyword)]) - ord('A')
+            encrypted_char = chr(((ord(char) - ord('A') + shift) % 26) + ord('A'))
+            ciphertext.append(encrypted_char)
+            keyword_index += 1
+        else:
+            ciphertext.append(char)  
+    return ''.join(ciphertext)
+
+def decrypt(ciphertext, keyword):
+    decrypted_text = []
+    keyword = keyword.upper()
+    ciphertext = ciphertext.upper()
+    keyword_index = 0
+    for char in ciphertext:
+        if char.isalpha():
+            shift = ord(keyword[keyword_index % len(keyword)]) - ord('A')
+            decrypted_char = chr(((ord(char) - ord('A') - shift + 26) % 26) + ord('A'))
+            decrypted_text.append(decrypted_char)
+            keyword_index += 1
+        else:
+            decrypted_text.append(char) 
+    return ''.join(decrypted_text)
+
+
+plaintext = input("Enter plaintext: ")
+keyword = input("Enter keyword: ")
+encrypted_text = encrypt(plaintext, keyword)
+print("Encrypted Text:", encrypted_text)
+decrypted_text = decrypt(encrypted_text, keyword)
+print("Decrypted Text:", decrypted_text)

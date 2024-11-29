@@ -1,0 +1,71 @@
+#DES
+!pip install pycryptodome
+
+from Crypto.Cipher import DES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+key=get_random_bytes(8)
+cipher=DES.new(key,DES.MODE_ECB)
+def encrypt(message):
+  cipher=DES.new(key,DES.MODE_ECB)
+  padded_text=pad(message,DES.block_size)
+  encrypted_msg=cipher.encrypt(padded_text)
+  return encrypted_msg
+def decrypt(encrypted_msg):
+  decrypted_msg=cipher.decrypt(encrypted_msg)
+  unpad_text=unpad(decrypted_msg,DES.block_size)
+  return unpad_text
+message=input("Enter message: ")
+encrypted_msg=encrypt(message.encode('utf-8'))
+print(encrypted_msg)
+decrypted_msg=decrypt(encrypted_msg)
+print(decrypted_msg)
+
+
+#BlowFish
+!pip install pycryptodome
+from Crypto.Cipher import Blowfish
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+key=get_random_bytes(32)
+cipher=Blowfish.new(key,Blowfish.MODE_ECB)
+
+def encrypt(message):
+  padded_text=pad(message,Blowfish.block_size)
+  encrypted_msg=cipher.encrypt(padded_text)
+  return encrypted_msg
+def decrypt(encrypted_msg):
+  decrypted=cipher.decrypt(encrypted_msg)
+  unpad_text=unpad(decrypted,Blowfish.block_size)
+  return unpad_text
+message=input("enter text: ")
+encrypted_msg=encrypt(message.encode('utf-8'))
+print(encrypted_msg)
+decrypted_msg=decrypt(encrypted_msg)
+print(decrypted_msg)
+
+
+#AES
+!pip install pycryptodome
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+
+key=get_random_bytes(16)
+cipher=AES.new(key,AES.MODE_ECB)
+
+def encrypt(message):
+  padded_text=pad(message,AES.block_size)
+  encrypted_msg=cipher.encrypt(padded_text)
+  return encrypted_msg
+def decrypt(encrypted_msg):
+  decrypted=cipher.decrypt(encrypted_msg)
+  unpad_text=unpad(decrypted,AES.block_size)
+  return unpad_text
+message=input("enter text: ")
+encrypted_msg=encrypt(message.encode('utf-8'))
+print(encrypted_msg)
+decrypted_msg=decrypt(encrypted_msg)
+print(decrypted_msg)

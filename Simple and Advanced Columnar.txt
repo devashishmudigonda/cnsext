@@ -1,0 +1,54 @@
+#Simple Columnar Transposition
+def simple_columnar_transposition(message, key):
+    message = message.replace(" ", "").upper()
+    key = key.upper()
+    num_columns = len(key)
+    num_rows = -(-len(message) // num_columns)
+    grid = [['X' for _ in range(num_columns)] for _ in range(num_rows)]
+    index = 0
+    for r in range(num_rows):
+        for c in range(num_columns):
+            if index < len(message):
+                grid[r][c] = message[index]
+                index += 1
+    
+    key_order = sorted(range(len(key)), key=lambda k: key[k])
+    cipher_text = ""
+    for c in key_order:
+        for r in range(num_rows):
+            cipher_text += grid[r][c]
+    return cipher_text
+
+
+message = "sneha"
+key = "312"
+cipher_text = simple_columnar_transposition(message, key)
+print("Simple Columnar Transposition Cipher Text:", cipher_text)
+
+
+#Advanced Columnar Transposition
+def advanced_columnar_transposition(message, key):
+    message = message.replace(" ", "").upper()
+    key = key.upper()
+    num_columns = len(key)
+    num_rows = -(-len(message) // num_columns)  
+    grid = [['X' for _ in range(num_columns)] for _ in range(num_rows)]
+    index = 0
+    for r in range(num_rows):
+        for c in range(num_columns):
+            if index < len(message):
+                grid[r][c] = message[index]
+                index += 1
+    col_order = sorted(range(num_columns), key=lambda c: key[c])
+    cipher_text = ""
+    for c in col_order:
+        for r in range(num_rows):
+            cipher_text += grid[r][c]
+    
+    return cipher_text
+
+
+message = input("Enter the message: ")
+key = input("Enter the key: ")
+cipher_text = advanced_columnar_transposition(message, key)
+print("Advanced Columnar Transposition Cipher Text:", cipher_text)
